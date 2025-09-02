@@ -1,0 +1,143 @@
+<!-- Hero Section -->
+<section class="hero-section bg-primary text-white py-5">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-lg-6">
+        <h1 class="display-4 fw-bold mb-4">Descubre los Mejores Dispositivos Inteligentes</h1>
+        <p class="lead mb-4">Encuentra smartphones, laptops, tablets y más de las mejores marcas del mercado. Tecnología de vanguardia a precios increíbles.</p>
+        <a routerLink="/devices" class="btn btn-light btn-lg me-3">
+          <i class="fas fa-shopping-cart me-2"></i>Ver Productos
+        </a>
+        <a routerLink="/devices" [queryParams]="{type: 'SMARTPHONE'}" class="btn btn-outline-light btn-lg">
+          <i class="fas fa-mobile-alt me-2"></i>Smartphones
+        </a>
+      </div>
+      <div class="col-lg-6 text-center">
+        <i class="fas fa-mobile-alt fa-10x text-light opacity-50"></i>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Categories Section -->
+<section class="py-5">
+  <div class="container">
+    <h2 class="text-center mb-5">Categorías Principales</h2>
+    <div class="row g-4">
+      <div class="col-md-3 col-sm-6">
+        <div class="card h-100 text-center category-card">
+          <div class="card-body">
+            <i class="fas fa-mobile-alt fa-3x text-primary mb-3"></i>
+            <h5 class="card-title">Smartphones</h5>
+            <p class="card-text">Los últimos modelos con tecnología avanzada</p>
+            <a routerLink="/devices" [queryParams]="{type: 'SMARTPHONE'}" class="btn btn-outline-primary">Ver más</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <div class="card h-100 text-center category-card">
+          <div class="card-body">
+            <i class="fas fa-laptop fa-3x text-primary mb-3"></i>
+            <h5 class="card-title">Laptops</h5>
+            <p class="card-text">Potencia y portabilidad en un solo dispositivo</p>
+            <a routerLink="/devices" [queryParams]="{type: 'LAPTOP'}" class="btn btn-outline-primary">Ver más</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <div class="card h-100 text-center category-card">
+          <div class="card-body">
+            <i class="fas fa-tablet-alt fa-3x text-primary mb-3"></i>
+            <h5 class="card-title">Tablets</h5>
+            <p class="card-text">Perfectas para trabajo y entretenimiento</p>
+            <a routerLink="/devices" [queryParams]="{type: 'TABLET'}" class="btn btn-outline-primary">Ver más</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <div class="card h-100 text-center category-card">
+          <div class="card-body">
+            <i class="fas fa-clock fa-3x text-primary mb-3"></i>
+            <h5 class="card-title">Smartwatches</h5>
+            <p class="card-text">Tecnología wearable de última generación</p>
+            <a routerLink="/devices" [queryParams]="{type: 'SMARTWATCH'}" class="btn btn-outline-primary">Ver más</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Latest Devices Section -->
+<section class="py-5 bg-light">
+  <div class="container">
+    <h2 class="text-center mb-5">Últimos Lanzamientos</h2>
+    
+    <!-- Debug Info -->
+    <div class="alert alert-info" role="alert">
+      <strong>Debug Info:</strong> 
+      <br>Loading: {{ loading }}
+      <br>Devices Count: {{ latestDevices.length }}
+      <br>Error: {{ errorMessage }}
+    </div>
+    
+    <div *ngIf="loading" class="text-center">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Cargando...</span>
+      </div>
+      <p class="mt-2">Cargando dispositivos...</p>
+    </div>
+
+    <div *ngIf="errorMessage" class="alert alert-danger" role="alert">
+      <i class="fas fa-exclamation-triangle me-2"></i>
+      <strong>Error:</strong> {{ errorMessage }}
+    </div>
+
+    <div *ngIf="!loading && latestDevices.length > 0" class="row g-4">
+      <div *ngFor="let device of latestDevices" class="col-lg-3 col-md-4 col-sm-6">
+        <div class="card h-100 device-card">
+          <img [src]="device.imageUrl || 'assets/images/placeholder.jpg'" 
+               class="card-img-top" [alt]="device.name"
+               style="height: 200px; object-fit: cover;">
+          <div class="card-body">
+            <h6 class="card-title">{{ device.name }}</h6>
+            <p class="card-text text-muted">{{ device.brand }}</p>
+            <span class="badge bg-secondary mb-2">{{ deviceTypeLabels[device.type] }}</span>
+            <p class="card-text fw-bold text-primary">${{ device.price | number:'1.0-0' }}</p>
+            <a [routerLink]="['/devices', device.id]" class="btn btn-primary btn-sm">
+              Ver Detalles
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="!loading && latestDevices.length === 0 && !errorMessage" class="text-center">
+      <p class="text-muted">No hay dispositivos disponibles en este momento.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Features Section -->
+<section class="py-5">
+  <div class="container">
+    <h2 class="text-center mb-5">¿Por qué elegir Smart Devices?</h2>
+    <div class="row g-4">
+      <div class="col-md-4 text-center">
+        <i class="fas fa-shipping-fast fa-3x text-primary mb-3"></i>
+        <h5>Envío Rápido</h5>
+        <p>Recibe tus productos en 24-48 horas en todo el país</p>
+      </div>
+      <div class="col-md-4 text-center">
+        <i class="fas fa-shield-alt fa-3x text-primary mb-3"></i>
+        <h5>Garantía Oficial</h5>
+        <p>Todos nuestros productos incluyen garantía de fábrica</p>
+      </div>
+      <div class="col-md-4 text-center">
+        <i class="fas fa-headset fa-3x text-primary mb-3"></i>
+        <h5>Soporte 24/7</h5>
+        <p>Nuestro equipo está disponible para ayudarte en cualquier momento</p>
+      </div>
+    </div>
+  </div>
+</section>

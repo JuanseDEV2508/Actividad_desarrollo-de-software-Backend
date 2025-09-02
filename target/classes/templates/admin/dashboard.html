@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administración - Smart Devices</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .admin-sidebar {
+            background: #343a40;
+            min-height: 100vh;
+            color: white;
+        }
+        .admin-sidebar .nav-link {
+            color: rgba(255,255,255,.75);
+        }
+        .admin-sidebar .nav-link:hover,
+        .admin-sidebar .nav-link.active {
+            color: white;
+            background: rgba(255,255,255,.1);
+        }
+        .stats-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 10px;
+        }
+        .table-responsive {
+            border-radius: 10px;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Admin Sidebar -->
+            <nav class="col-md-3 col-lg-2 d-md-block admin-sidebar collapse">
+                <div class="position-sticky pt-3">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-cog fa-2x mb-2"></i>
+                        <h5>Panel Admin</h5>
+                    </div>
+                    
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="/admin">
+                                <i class="fas fa-tachometer-alt me-2"></i>
+                                Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/devices/admin/new">
+                                <i class="fas fa-plus me-2"></i>
+                                Agregar Dispositivo
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/devices">
+                                <i class="fas fa-mobile-alt me-2"></i>
+                                Gestionar Dispositivos
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/comments/admin">
+                                <i class="fas fa-comments me-2"></i>
+                                Gestionar Comentarios
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/">
+                                <i class="fas fa-home me-2"></i>
+                                Ver Sitio Web
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <!-- Main Content -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2">Dashboard de Administración</h1>
+                    <div class="btn-toolbar mb-2 mb-md-0">
+                        <div class="btn-group me-2">
+                            <a href="/devices/admin/new" class="btn btn-primary">
+                                <i class="fas fa-plus me-2"></i>Nuevo Dispositivo
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Statistics Cards -->
+                <div class="row mb-4">
+                    <div class="col-xl-3 col-md-6 mb-4">
+                        <div class="card stats-card border-0 shadow h-100 py-2">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-uppercase mb-1">
+                                            Total Dispositivos
+                                        </div>
+                                        <div class="h5 mb-0 font-weight-bold" th:text="${totalDevices}">0</div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fas fa-mobile-alt fa-2x text-white-50"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-3 col-md-6 mb-4">
+                        <div class="card border-left-primary shadow h-100 py-2">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                            Últimos Lanzamientos
+                                        </div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800" th:text="${latestDevices.size()}">0</div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-3 col-md-6 mb-4">
+                        <div class="card border-left-success shadow h-100 py-2">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                            Comentarios
+                                        </div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800">0</div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fas fa-comments fa-2x text-gray-300"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-3 col-md-6 mb-4">
+                        <div class="card border-left-info shadow h-100 py-2">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                            Usuarios Activos
+                                        </div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800">0</div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fas fa-users fa-2x text-gray-300"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Latest Devices Table -->
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                        <h6 class="m-0 font-weight-bold text-primary">Últimos Dispositivos Agregados</h6>
+                        <a href="/devices" class="btn btn-primary btn-sm">
+                            <i class="fas fa-eye me-1"></i>Ver Todos
+                        </a>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered" width="100%" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Nombre</th>
+                                        <th>Marca</th>
+                                        <th>Tipo</th>
+                                        <th>Precio</th>
+                                        <th>Fecha Lanzamiento</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="device : ${latestDevices}">
+                                        <td th:text="${device.id}">1</td>
+                                        <td th:text="${device.name}">Device Name</td>
+                                        <td th:text="${device.brand}">Brand</td>
+                                        <td>
+                                            <span class="badge bg-primary" th:text="${device.type.displayName}">Type</span>
+                                        </td>
+                                        <td th:text="${'$' + device.price}">$0.00</td>
+                                        <td th:text="${device.releaseDate != null ? #temporals.format(device.releaseDate, 'dd/MM/yyyy') : 'N/A'}">01/01/2024</td>
+                                        <td>
+                                            <div class="btn-group" role="group">
+                                                <a th:href="@{/devices/{id}(id=${device.id})}" class="btn btn-info btn-sm">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+                                                <a th:href="@{/devices/admin/edit/{id}(id=${device.id})}" class="btn btn-warning btn-sm">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                                <form th:action="@{/devices/admin/delete/{id}(id=${device.id})}" method="post" style="display: inline;">
+                                                    <button type="submit" class="btn btn-danger btn-sm" 
+                                                            onclick="return confirm('¿Estás seguro de que quieres eliminar este dispositivo?')">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr th:if="${latestDevices.empty()}">
+                                        <td colspan="7" class="text-center text-muted">
+                                            <i class="fas fa-inbox fa-2x mb-2"></i>
+                                            <p>No hay dispositivos registrados</p>
+                                            <a href="/devices/admin/new" class="btn btn-primary">
+                                                <i class="fas fa-plus me-2"></i>Agregar Primer Dispositivo
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-primary">Acciones Rápidas</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="list-group list-group-flush">
+                                    <a href="/devices/admin/new" class="list-group-item list-group-item-action">
+                                        <i class="fas fa-plus me-2"></i>Agregar Nuevo Dispositivo
+                                    </a>
+                                    <a href="/devices" class="list-group-item list-group-item-action">
+                                        <i class="fas fa-list me-2"></i>Gestionar Dispositivos
+                                    </a>
+                                    <a href="/comments/admin" class="list-group-item list-group-item-action">
+                                        <i class="fas fa-comments me-2"></i>Revisar Comentarios
+                                    </a>
+                                    <a href="/" class="list-group-item list-group-item-action">
+                                        <i class="fas fa-eye me-2"></i>Ver Sitio Web
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-6">
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-primary">Información del Sistema</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <p class="mb-1"><strong>Base de Datos:</strong></p>
+                                        <p class="text-muted">H2 Database</p>
+                                    </div>
+                                    <div class="col-6">
+                                        <p class="mb-1"><strong>Framework:</strong></p>
+                                        <p class="text-muted">Spring Boot 3.2.0</p>
+                                    </div>
+                                    <div class="col-6">
+                                        <p class="mb-1"><strong>Java Version:</strong></p>
+                                        <p class="text-muted">Java 17</p>
+                                    </div>
+                                    <div class="col-6">
+                                        <p class="mb-1"><strong>Arquitectura:</strong></p>
+                                        <p class="text-muted">Layered Architecture</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

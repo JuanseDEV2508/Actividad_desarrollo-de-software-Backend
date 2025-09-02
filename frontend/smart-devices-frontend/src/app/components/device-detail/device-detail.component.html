@@ -1,0 +1,174 @@
+<div class="container py-4" *ngIf="device">
+  <!-- Debug Info -->
+  <div class="alert alert-info" role="alert">
+    <strong>Debug Info:</strong> 
+    <br>Loading: {{ loading }}
+    <br>Device ID: {{ device.id }}
+    <br>Comments Count: {{ comments.length }}
+    <br>Average Rating: {{ averageRating }}
+    <br>Error: {{ errorMessage }}
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Cargando...</span>
+    </div>
+    <p class="mt-3">Cargando detalles del dispositivo...</p>
+  </div>
+
+  <!-- Error -->
+  <div *ngIf="errorMessage" class="alert alert-danger" role="alert">
+    <i class="fas fa-exclamation-triangle me-2"></i>
+    <strong>Error:</strong> {{ errorMessage }}
+  </div>
+
+  <!-- Detalles del dispositivo -->
+  <div *ngIf="!loading && !errorMessage" class="row">
+    <!-- Imagen del dispositivo -->
+    <div class="col-lg-6 mb-4">
+      <div class="card">
+        <img [src]="device.imageUrl || 'assets/images/placeholder.jpg'" 
+             class="card-img-top" [alt]="device.name"
+             style="height: 400px; object-fit: cover;">
+      </div>
+    </div>
+
+    <!-- Información del dispositivo -->
+    <div class="col-lg-6 mb-4">
+      <div class="card h-100">
+        <div class="card-body">
+          <h2 class="card-title">{{ device.name }}</h2>
+          <p class="text-muted mb-3">{{ device.brand }}</p>
+          
+          <span class="badge bg-secondary mb-3">{{ getDeviceTypeLabel(device.type) }}</span>
+          
+          <h3 class="text-primary mb-3">${{ device.price | number:'1.0-0' }}</h3>
+          
+          <p class="card-text">{{ device.description }}</p>
+          
+          <div *ngIf="device.specifications" class="mb-3">
+            <h5>Especificaciones:</h5>
+            <p class="text-muted">{{ device.specifications }}</p>
+          </div>
+          
+          <div *ngIf="device.releaseDate" class="mb-3">
+            <strong>Fecha de lanzamiento:</strong> {{ device.releaseDate | date:'longDate' }}
+          </div>
+
+          <!-- Rating promedio -->
+          <div class="mb-3">
+            <h5>Calificación promedio:</h5>
+            <div class="d-flex align-items-center">
+              <div class="me-2">
+                <i *ngFor="let star of getStarRating(Math.round(averageRating))" 
+                   [class]="star"></i>
+              </div>
+              <span class="me-2">{{ averageRating | number:'1.1-1' }}/5</span>
+              <span class="text-muted">({{ totalComments }} comentarios)</span>
+            </div>
+          </div>
+
+          <a routerLink="/devices" class="btn btn-outline-primary">
+            <i class="fas fa-arrow-left me-2"></i>Volver al catálogo
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sección de comentarios -->
+  <div *ngIf="!loading && !errorMessage" class="row mt-4">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <h4 class="mb-0">
+            <i class="fas fa-comments me-2"></i>Comentarios ({{ totalComments }})
+          </h4>
+        </div>
+        <div class="card-body">
+          <!-- Formulario para nuevo comentario -->
+          <div class="mb-4">
+            <h5>Agregar comentario</h5>
+            <form (ngSubmit)="submitComment()">
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label for="userName" class="form-label">Nombre</label>
+                  <input type="text" 
+                         class="form-control" 
+                         id="userName"
+                         [(ngModel)]="newComment.userName"
+                         name="userName"
+                         required>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label for="rating" class="form-label">Calificación</label>
+                  <select class="form-select" 
+                          id="rating"
+                          [(ngModel)]="newComment.rating"
+                          name="rating">
+                    <option value="5">5 estrellas - Excelente</option>
+                    <option value="4">4 estrellas - Muy bueno</option>
+                    <option value="3">3 estrellas - Bueno</option>
+                    <option value="2">2 estrellas - Regular</option>
+                    <option value="1">1 estrella - Malo</option>
+                  </select>
+                </div>
+              </div>
+              <div class="mb-3">
+                <label for="commentText" class="form-label">Comentario</label>
+                <textarea class="form-control" 
+                          id="commentText"
+                          [(ngModel)]="newComment.commentText"
+                          name="commentText"
+                          rows="3"
+                          required
+                          placeholder="Comparte tu experiencia con este dispositivo..."></textarea>
+              </div>
+              <button type="submit" class="btn btn-primary">
+                <i class="fas fa-paper-plane me-2"></i>Enviar comentario
+              </button>
+            </form>
+          </div>
+
+          <!-- Lista de comentarios -->
+          <div *ngIf="comments.length > 0">
+            <h5>Comentarios recientes</h5>
+            <div *ngFor="let comment of comments" class="border-bottom pb-3 mb-3">
+              <div class="d-flex justify-content-between align-items-start">
+                <div>
+                  <h6 class="mb-1">{{ comment.userName }}</h6>
+                  <div class="mb-2">
+                    <i *ngFor="let star of getStarRating(comment.rating)" 
+                       [class]="star"></i>
+                  </div>
+                  <p class="mb-1">{{ comment.commentText }}</p>
+                  <small class="text-muted">
+                    {{ comment.createdAt | date:'medium' }}
+                  </small>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sin comentarios -->
+          <div *ngIf="comments.length === 0" class="text-center py-4">
+            <i class="fas fa-comment-slash fa-3x text-muted mb-3"></i>
+            <h5 class="text-muted">No hay comentarios aún</h5>
+            <p class="text-muted">Sé el primero en compartir tu experiencia</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Dispositivo no encontrado -->
+<div *ngIf="!loading && !device && !errorMessage" class="container py-5 text-center">
+  <i class="fas fa-search fa-3x text-muted mb-3"></i>
+  <h3 class="text-muted">Dispositivo no encontrado</h3>
+  <p class="text-muted">El dispositivo que buscas no existe o ha sido eliminado.</p>
+  <a routerLink="/devices" class="btn btn-primary">
+    <i class="fas fa-arrow-left me-2"></i>Volver al catálogo
+  </a>
+</div>

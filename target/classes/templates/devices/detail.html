@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${device.name + ' - Smart Devices'}">Device Detail - Smart Devices</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .device-image {
+            max-height: 400px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+        .rating {
+            color: #ffc107;
+        }
+        .specs-table {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 1rem;
+        }
+        .comment-card {
+            border-left: 4px solid #007bff;
+        }
+        .price-display {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #28a745;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-mobile-alt me-2"></i>Smart Devices
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Inicio</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            Categorías
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="/devices/type/SMARTPHONE">Smartphones</a></li>
+                            <li><a class="dropdown-item" href="/devices/type/LAPTOP">Laptops</a></li>
+                            <li><a class="dropdown-item" href="/devices/type/TABLET">Tablets</a></li>
+                            <li><a class="dropdown-item" href="/devices/type/SMARTWATCH">Smartwatches</a></li>
+                            <li><a class="dropdown-item" href="/devices/type/HEADPHONES">Audífonos</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/devices/advanced-search">Búsqueda Avanzada</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">Acerca de</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/contact">Contacto</a>
+                    </li>
+                </ul>
+                
+                <!-- Search Form -->
+                <form class="d-flex" action="/devices/search" method="get">
+                    <input class="form-control me-2" type="search" name="q" placeholder="Buscar dispositivos...">
+                    <button class="btn btn-outline-primary" type="submit">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </form>
+                
+                <!-- Admin Link -->
+                <ul class="navbar-nav ms-3">
+                    <li class="nav-item">
+                        <a class="nav-link text-danger" href="/admin">
+                            <i class="fas fa-cog"></i> Admin
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Breadcrumb -->
+    <div class="container mt-3">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Inicio</a></li>
+                <li class="breadcrumb-item"><a href="/devices">Dispositivos</a></li>
+                <li class="breadcrumb-item"><a th:href="@{/devices/type/{type}(type=${device.type})}" th:text="${device.type.displayName}">Type</a></li>
+                <li class="breadcrumb-item active" aria-current="page" th:text="${device.name}">Device Name</li>
+            </ol>
+        </nav>
+    </div>
+
+    <!-- Device Detail Section -->
+    <div class="container py-4">
+        <div class="row">
+            <!-- Device Image -->
+            <div class="col-lg-6 mb-4">
+                <img th:if="${device.imageUrl}" th:src="${device.imageUrl}" class="img-fluid device-image" 
+                     th:alt="${device.name}">
+                <div th:unless="${device.imageUrl}" class="device-image bg-secondary d-flex align-items-center justify-content-center">
+                    <i class="fas fa-image text-white" style="font-size: 6rem;"></i>
+                </div>
+            </div>
+            
+            <!-- Device Info -->
+            <div class="col-lg-6">
+                <h1 class="mb-3" th:text="${device.name}">Device Name</h1>
+                
+                <!-- Brand and Type -->
+                <div class="mb-3">
+                    <span class="badge bg-primary me-2" th:text="${device.brand}">Brand</span>
+                    <span class="badge bg-secondary" th:text="${device.type.displayName}">Type</span>
+                </div>
+                
+                <!-- Rating -->
+                <div class="mb-3">
+                    <div class="rating">
+                        <span th:if="${averageRating != null}">
+                            <span th:each="i : ${#numbers.sequence(1, 5)}">
+                                <i th:class="${i <= averageRating} ? 'fas fa-star' : 'far fa-star'"></i>
+                            </span>
+                            <span class="ms-2" th:text="${averageRating + ' / 5'}">4.5 / 5</span>
+                            <span class="text-muted" th:text="${'(' + commentCount + ' reseñas)'}">(10 reseñas)</span>
+                        </span>
+                        <span th:unless="${averageRating != null}" class="text-muted">Sin calificaciones aún</span>
+                    </div>
+                </div>
+                
+                <!-- Price -->
+                <div class="mb-4">
+                    <span class="price-display" th:text="${'$' + device.price}">$0.00</span>
+                </div>
+                
+                <!-- Description -->
+                <div class="mb-4" th:if="${device.description}">
+                    <h5>Descripción</h5>
+                    <p class="text-muted" th:text="${device.description}">Description</p>
+                </div>
+                
+                <!-- Release Date -->
+                <div class="mb-4" th:if="${device.releaseDate}">
+                    <h5>Fecha de Lanzamiento</h5>
+                    <p class="text-muted" th:text="${#temporals.format(device.releaseDate, 'dd/MM/yyyy')}">01/01/2024</p>
+                </div>
+                
+                <!-- Action Buttons -->
+                <div class="d-grid gap-2 d-md-block">
+                    <button class="btn btn-primary btn-lg me-md-2">
+                        <i class="fas fa-shopping-cart me-2"></i>Agregar al Carrito
+                    </button>
+                    <button class="btn btn-outline-primary btn-lg">
+                        <i class="fas fa-heart me-2"></i>Agregar a Favoritos
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Specifications -->
+        <div class="row mt-5" th:if="${device.specifications}">
+            <div class="col-12">
+                <h3>Especificaciones Técnicas</h3>
+                <div class="specs-table">
+                    <pre th:text="${device.specifications}">Specifications</pre>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Comments Section -->
+        <div class="row mt-5">
+            <div class="col-12">
+                <h3>Reseñas y Comentarios</h3>
+                
+                <!-- Add Comment Form -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">Agregar tu Reseña</h5>
+                    </div>
+                    <div class="card-body">
+                        <form th:action="@{/comments/device/{id}(id=${device.id})}" method="post">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="userName" class="form-label">Tu Nombre</label>
+                                    <input type="text" class="form-control" id="userName" name="userName" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="rating" class="form-label">Calificación</label>
+                                    <select class="form-select" id="rating" name="rating" required>
+                                        <option value="">Selecciona una calificación</option>
+                                        <option value="5">⭐⭐⭐⭐⭐ Excelente (5)</option>
+                                        <option value="4">⭐⭐⭐⭐ Muy Bueno (4)</option>
+                                        <option value="3">⭐⭐⭐ Bueno (3)</option>
+                                        <option value="2">⭐⭐ Regular (2)</option>
+                                        <option value="1">⭐ Malo (1)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="commentText" class="form-label">Tu Comentario</label>
+                                <textarea class="form-control" id="commentText" name="commentText" rows="4" 
+                                          placeholder="Comparte tu experiencia con este dispositivo..." required></textarea>
+                                <div class="form-text">Mínimo 10 caracteres, máximo 500 caracteres.</div>
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-paper-plane me-2"></i>Publicar Reseña
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                
+                <!-- Comments List -->
+                <div th:if="${!comments.empty()}">
+                    <div th:each="comment : ${comments}" class="card comment-card mb-3">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <div>
+                                    <h6 class="mb-1" th:text="${comment.userName}">User Name</h6>
+                                    <div class="rating">
+                                        <span th:each="i : ${#numbers.sequence(1, 5)}">
+                                            <i th:class="${i <= comment.rating} ? 'fas fa-star' : 'far fa-star'"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                                <small class="text-muted" th:text="${#temporals.format(comment.createdAt, 'dd/MM/yyyy HH:mm')}">
+                                    01/01/2024 12:00
+                                </small>
+                            </div>
+                            <p class="card-text" th:text="${comment.commentText}">Comment text</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- No Comments Message -->
+                <div th:if="${comments.empty()}" class="text-center py-5">
+                    <i class="fas fa-comments" style="font-size: 4rem; color: #ccc; margin-bottom: 1rem;"></i>
+                    <h4>No hay reseñas aún</h4>
+                    <p class="text-muted">Sé el primero en compartir tu experiencia con este dispositivo</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Related Devices -->
+        <div class="row mt-5">
+            <div class="col-12">
+                <h3>Dispositivos Relacionados</h3>
+                <div class="row g-4">
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-body text-center">
+                                <i class="fas fa-plus text-muted" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                                <h5>Más dispositivos</h5>
+                                <p class="text-muted">Explora otros productos similares</p>
+                                <a href="/devices" class="btn btn-outline-primary">Ver Todos</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-light py-4 mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5>Smart Devices</h5>
+                    <p>Tu tienda de confianza para dispositivos inteligentes de última generación.</p>
+                </div>
+                <div class="col-md-4">
+                    <h5>Enlaces Rápidos</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="/" class="text-light text-decoration-none">Inicio</a></li>
+                        <li><a href="/devices" class="text-light text-decoration-none">Productos</a></li>
+                        <li><a href="/about" class="text-light text-decoration-none">Acerca de</a></li>
+                        <li><a href="/contact" class="text-light text-decoration-none">Contacto</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h5>Contacto</h5>
+                    <p>
+                        <i class="fas fa-envelope me-2"></i>info@smartdevices.com<br>
+                        <i class="fas fa-phone me-2"></i>+1 234 567 890<br>
+                        <i class="fas fa-map-marker-alt me-2"></i>Bogotá, Colombia
+                    </p>
+                </div>
+            </div>
+            <hr>
+            <div class="text-center">
+                <p>&copy; 2024 Smart Devices. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

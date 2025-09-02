@@ -1,0 +1,97 @@
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container">
+    <a class="navbar-brand" routerLink="/">
+      <i class="fas fa-mobile-alt me-2"></i>Smart Devices
+    </a>
+    
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Inicio</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+            Categorías
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" routerLink="/devices" [queryParams]="{type: 'SMARTPHONE'}">Smartphones</a></li>
+            <li><a class="dropdown-item" routerLink="/devices" [queryParams]="{type: 'LAPTOP'}">Laptops</a></li>
+            <li><a class="dropdown-item" routerLink="/devices" [queryParams]="{type: 'TABLET'}">Tablets</a></li>
+            <li><a class="dropdown-item" routerLink="/devices" [queryParams]="{type: 'SMARTWATCH'}">Smartwatches</a></li>
+            <li><a class="dropdown-item" routerLink="/devices" [queryParams]="{type: 'HEADPHONES'}">Audífonos</a></li>
+          </ul>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/devices" routerLinkActive="active">Dispositivos</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/admin" routerLinkActive="active">Admin</a>
+        </li>
+      </ul>
+      
+      <!-- Search Form -->
+      <form class="d-flex" (ngSubmit)="onSearch()">
+        <input class="form-control me-2" type="search" name="searchTerm" placeholder="Buscar dispositivos..." 
+               [(ngModel)]="searchTerm">
+        <button class="btn btn-outline-primary" type="submit">
+          <i class="fas fa-search"></i>
+        </button>
+      </form>
+    </div>
+  </div>
+</nav>
+
+<!-- Flash Messages -->
+<div *ngIf="message" class="alert alert-success alert-dismissible fade show m-3" role="alert">
+  <i class="fas fa-check-circle me-2"></i>
+  <span>{{ message }}</span>
+  <button type="button" class="btn-close" (click)="clearMessage()"></button>
+</div>
+
+<div *ngIf="errorMessage" class="alert alert-danger alert-dismissible fade show m-3" role="alert">
+  <i class="fas fa-exclamation-circle me-2"></i>
+  <span>{{ errorMessage }}</span>
+  <button type="button" class="btn-close" (click)="clearErrorMessage()"></button>
+</div>
+
+<!-- Main Content -->
+<main>
+  <router-outlet></router-outlet>
+</main>
+
+<!-- Footer -->
+<footer class="bg-dark text-light py-4 mt-5">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-4">
+        <h5>Smart Devices</h5>
+        <p>Tu tienda de confianza para dispositivos inteligentes de última generación.</p>
+      </div>
+      <div class="col-md-4">
+        <h5>Enlaces Rápidos</h5>
+        <ul class="list-unstyled">
+          <li><a routerLink="/" class="text-light text-decoration-none">Inicio</a></li>
+          <li><a routerLink="/devices" class="text-light text-decoration-none">Productos</a></li>
+          <li><a routerLink="/admin" class="text-light text-decoration-none">Admin</a></li>
+        </ul>
+      </div>
+      <div class="col-md-4">
+        <h5>Contacto</h5>
+        <p>
+          <i class="fas fa-envelope me-2"></i>info&#64;smartdevices.com<br>
+          <i class="fas fa-phone me-2"></i>+1 234 567 890<br>
+          <i class="fas fa-map-marker-alt me-2"></i>Bogotá, Colombia
+        </p>
+      </div>
+    </div>
+    <hr>
+    <div class="text-center">
+      <p>&copy; 2024 Smart Devices. Todos los derechos reservados.</p>
+    </div>
+  </div>
+</footer>

@@ -1,0 +1,12 @@
+/home/inkremental/Documents/Actividad 1 Backend/Proyecto/Proyecto/src/main/java/com/smartdevices/controller/ApiController.java
+/home/inkremental/Documents/Actividad 1 Backend/Proyecto/Proyecto/src/main/java/com/smartdevices/model/DeviceType.java
+/home/inkremental/Documents/Actividad 1 Backend/Proyecto/Proyecto/src/main/java/com/smartdevices/SmartDevicesApplication.java
+/home/inkremental/Documents/Actividad 1 Backend/Proyecto/Proyecto/src/main/java/com/smartdevices/model/Device.java
+/home/inkremental/Documents/Actividad 1 Backend/Proyecto/Proyecto/src/main/java/com/smartdevices/model/Comment.java
+/home/inkremental/Documents/Actividad 1 Backend/Proyecto/Proyecto/src/main/java/com/smartdevices/service/DeviceService.java
+/home/inkremental/Documents/Actividad 1 Backend/Proyecto/Proyecto/src/main/java/com/smartdevices/controller/CommentController.java
+/home/inkremental/Documents/Actividad 1 Backend/Proyecto/Proyecto/src/main/java/com/smartdevices/repository/CommentRepository.java
+/home/inkremental/Documents/Actividad 1 Backend/Proyecto/Proyecto/src/main/java/com/smartdevices/service/CommentService.java
+/home/inkremental/Documents/Actividad 1 Backend/Proyecto/Proyecto/src/main/java/com/smartdevices/repository/DeviceRepository.java
+/home/inkremental/Documents/Actividad 1 Backend/Proyecto/Proyecto/src/main/java/com/smartdevices/controller/DeviceController.java
+/home/inkremental/Documents/Actividad 1 Backend/Proyecto/Proyecto/src/main/java/com/smartdevices/controller/HomeController.java

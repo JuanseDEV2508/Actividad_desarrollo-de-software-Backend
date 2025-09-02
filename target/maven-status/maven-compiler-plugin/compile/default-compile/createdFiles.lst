@@ -1,0 +1,12 @@
+com/smartdevices/repository/CommentRepository.class
+com/smartdevices/model/DeviceType.class
+com/smartdevices/repository/DeviceRepository.class
+com/smartdevices/service/CommentService.class
+com/smartdevices/controller/DeviceController.class
+com/smartdevices/model/Device.class
+com/smartdevices/SmartDevicesApplication.class
+com/smartdevices/controller/ApiController.class
+com/smartdevices/controller/CommentController.class
+com/smartdevices/controller/HomeController.class
+com/smartdevices/model/Comment.class
+com/smartdevices/service/DeviceService.class
